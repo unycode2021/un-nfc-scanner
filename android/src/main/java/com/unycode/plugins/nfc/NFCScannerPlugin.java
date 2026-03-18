@@ -35,13 +35,13 @@ public class NFCScannerPlugin extends Plugin {
     private static class PendingWrite {
         final PluginCall call;
         final String uri;
-        final String jsonPayload;
+        final String payload;
         final boolean lock;
 
-        PendingWrite(PluginCall call, String uri, String jsonPayload, boolean lock) {
+        PendingWrite(PluginCall call, String uri, String payload, boolean lock) {
             this.call = call;
             this.uri = uri;
-            this.jsonPayload = jsonPayload;
+            this.payload = payload;
             this.lock = lock;
         }
     }
@@ -155,17 +155,17 @@ public class NFCScannerPlugin extends Plugin {
     }
 
     @PluginMethod
-    public void writeDominoTag(PluginCall call) {
+    public void writeTag(PluginCall call) {
         String uri = call.getString("uri");
-        String jsonPayload = call.getString("jsonPayload");
+        String payload = call.getString("payload");
         boolean lock = call.getBoolean("lock", false);
 
         if (uri == null || uri.isEmpty()) {
             call.reject("uri is required");
             return;
         }
-        if (jsonPayload == null) {
-            call.reject("jsonPayload is required");
+        if (payload == null) {
+            call.reject("payload is required");
             return;
         }
 
@@ -186,7 +186,7 @@ public class NFCScannerPlugin extends Plugin {
 
         call.save();
         writeCancelled = false;
-        pendingWrite = new PendingWrite(call, uri, jsonPayload, lock);
+        pendingWrite = new PendingWrite(call, uri, payload, lock);
 
         // Must enable in onResume; also try now in case we're already resumed
         tryEnableForegroundDispatch();
@@ -289,8 +289,8 @@ public class NFCScannerPlugin extends Plugin {
         new Thread(() -> {
             try {
                 NdefRecord uriRecord = NdefRecord.createUri(pw.uri);
-                byte[] jsonBytes = pw.jsonPayload.getBytes(StandardCharsets.UTF_8);
-                NdefRecord mimeRecord = NdefRecord.createMime("application/json", jsonBytes);
+                byte[] payloadBytes = pw.payload.getBytes(StandardCharsets.UTF_8);
+                NdefRecord mimeRecord = NdefRecord.createMime("application/json", payloadBytes);
                 NdefMessage message = new NdefMessage(new NdefRecord[]{uriRecord, mimeRecord});
 
                 Ndef ndef = Ndef.get(tag);

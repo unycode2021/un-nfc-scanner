@@ -21,7 +21,7 @@ npx cap sync
 * [`removeAllListeners()`](#removealllisteners)
 * [`getLaunchIntent()`](#getlaunchintent)
 * [`clearLaunchIntent()`](#clearlaunchintent)
-* [`writeDominoTag(...)`](#writedominotag)
+* [`writeTag(...)`](#writetag)
 * [`cancelWrite()`](#cancelwrite)
 * [Interfaces](#interfaces)
 
@@ -133,18 +133,19 @@ Clears the saved launch intent data
 --------------------
 
 
-### writeDominoTag(...)
+### writeTag(...)
 
 ```typescript
-writeDominoTag(options: { uri: string; jsonPayload: string; lock?: boolean; }) => Promise<{ tagId: string; written: boolean; locked: boolean; tagData?: NFCTagData; }>
+writeTag(options: { uri: string; payload: string; lock?: boolean; }) => Promise<{ tagId: string; written: boolean; locked: boolean; tagData?: NFCTagData; }>
 ```
 
-Write Domino tag (URI + JSON payload) to NFC tag. Keeps call alive until user taps tag.
+Write NFC tag with URI and JSON payload. Keeps call alive until user taps tag.
+The caller passes the uri and payload to write - no hardcoded data.
 For NTAG215 (~540 bytes) or NTAG213 (~144 bytes). Optionally lock tag after write.
 
-| Param         | Type                                                               |
-| ------------- | ------------------------------------------------------------------ |
-| **`options`** | <code>{ uri: string; jsonPayload: string; lock?: boolean; }</code> |
+| Param         | Type                                                           |
+| ------------- | -------------------------------------------------------------- |
+| **`options`** | <code>{ uri: string; payload: string; lock?: boolean; }</code> |
 
 **Returns:** <code>Promise&lt;{ tagId: string; written: boolean; locked: boolean; tagData?: <a href="#nfctagdata">NFCTagData</a>; }&gt;</code>
 

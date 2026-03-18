@@ -42,12 +42,13 @@ export interface NFCScannerPlugin {
   clearLaunchIntent(): Promise<void>;
 
   /**
-   * Write Domino tag (URI + JSON payload) to NFC tag. Keeps call alive until user taps tag.
+   * Write NFC tag with URI and JSON payload. Keeps call alive until user taps tag.
+   * The caller passes the uri and payload to write - no hardcoded data.
    * For NTAG215 (~540 bytes) or NTAG213 (~144 bytes). Optionally lock tag after write.
    */
-  writeDominoTag(options: {
+  writeTag(options: {
     uri: string;
-    jsonPayload: string;
+    payload: string;
     lock?: boolean;
   }): Promise<{ tagId: string; written: boolean; locked: boolean; tagData?: NFCTagData }>;
 

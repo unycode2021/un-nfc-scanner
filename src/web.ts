@@ -130,7 +130,7 @@ export class NFCScannerWeb extends WebPlugin implements NFCScannerPlugin {
     return;
   }
 
-  async writeDominoTag(_options: { uri: string; jsonPayload: string; lock?: boolean }): Promise<{ tagId: string; written: boolean; locked: boolean }> {
+  async writeTag(_options: { uri: string; payload: string; lock?: boolean }): Promise<{ tagId: string; written: boolean; locked: boolean }> {
     throw new Error('NFC tag writing is only supported on Android');
   }
 
